@@ -1,15 +1,15 @@
 
 class MenuModel {
-  String? name;
-  String ?id;
-  String ?type;
-  List<Children> ?children;
+   String ?name;
+   String ?id;
+   String ?type;
+   List<Children> ?children;
 
-  MenuModel({this.name, this.id, this.type, this.children});
+  MenuModel({ this.name,this.id,  this.type,  this.children});
 
   MenuModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
-    id = json['id'];
+    id = json['id'] ;
     type = json['type'];
     if (json['children'] != null) {
       children = <Children>[];
@@ -33,7 +33,7 @@ class MenuModel {
 
 class Children {
   String ?name;
-  String? id;
+  String ? id;
   String ?type;
 
   Children({this.name, this.id, this.type});

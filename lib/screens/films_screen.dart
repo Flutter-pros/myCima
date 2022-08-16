@@ -1,34 +1,34 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'package:cima_app/controller/api.dart';
-import 'package:cima_app/models/menu_api_model.dart';
 import 'package:cima_app/models/texonomy_model.dart';
-import 'package:cima_app/screens/search.dart';
 import 'package:cima_app/widget/drawer.dart';
 import 'package:cima_app/widget/taxonomy_item.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+import '../models/menu_api_model.dart';
+class FilmsScreen extends StatefulWidget {
+  const FilmsScreen({Key? key}) : super(key: key);
+
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _FilmsScreenState createState() => _FilmsScreenState();
 }
-class _HomeScreenState extends State<HomeScreen> {
-  TaxonomyApi taxonomyApi = TaxonomyApi();
+
+class _FilmsScreenState extends State<FilmsScreen> {
   MenuApi menuApi = MenuApi();
+  TaxonomyApi taxonomyApi = TaxonomyApi();
   late Future<List<TaxonomyModel>> taxonomyData;
   late Future<List<MenuModel>> menuData;
-  late List<TaxonomyModel> allCategory;
-  late List<TaxonomyModel>searchedForCategory;
-  bool isSearched = false;
-  final _searchedTextController = TextEditingController();
-
-
+  MenuModel menuModel=MenuModel();
+  Children children=Children();
   @override
   void initState() {
-    // TODO: implement initState
-   // taxonomyData = taxonomyApi.getDataCategory();
-   // taxonomyData= taxonomyApi.getDataCategory() ;
-   // menuData = menuApi.getDataMenu();
+
+       taxonomyData = taxonomyApi.getCategory(
+         id: menuModel.id = "38365",
+       );
+
 
     super.initState();
   }
@@ -48,29 +48,26 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.search,color: Colors.white,),
-            onPressed: (){
-              showSearch(context: context, delegate: SearchItem());
-            },
+            onPressed: (){},
           ),
         ],
       ),
       drawer: const DrawerWidget(),
-      body:SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Container(
           color: const Color.fromRGBO(14, 19, 49, 1),
           child: Column(
             children: [
-              buildTaxonomyList(),
+              buildFilmsList(),
             ],
           ),
         ),
       ),
-
     );
   }
-  Widget buildTaxonomyList(){
+  Widget buildFilmsList(){
     return FutureBuilder<List<TaxonomyModel>>(
-        future: taxonomyApi.getDataCategory(),
+        future: taxonomyData,
         builder: (BuildContext context, AsyncSnapshot snapshot){
 
           if(snapshot.hasData){
@@ -84,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
-              itemCount:data.length,
+              itemCount:  data.length,
               itemBuilder: (context, index) {
                 return TaxonomyItem(
                     taxonomyModel: data[index]
@@ -102,9 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         }
     );
-
   }
-
   Widget showLoadingIndicator() {
     return const Center(
       child: CircularProgressIndicator(
@@ -112,4 +107,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-  }
+}

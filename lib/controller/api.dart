@@ -57,12 +57,33 @@ class MenuApi{
   }
 }
 class TaxonomyApi{
-  Future<List<TaxonomyModel>>getDataTaxonomy()async{
+  MenuModel menuModel=MenuModel();
+  List<TaxonomyModel> results=[];
+ Future<List<TaxonomyModel>> getDataCategory({String ?query})async{
     String url="https://mycima.fun/appweb/posts/archived_%7Btaxonomy%7D[%7Bterm%7D]/";
     var response = (await http.get(Uri.parse(url))) ;
     // if (kDebugMode) {
     //   print(response.body.toString());
     // }
+    if(response.statusCode==200){
+      List data=jsonDecode(response.body);
+      results= data.map((e) => TaxonomyModel.fromJson(e)).toList();
+      if(query !=null){
+        results=results.where((element) => element.title!.toLowerCase().contains(query.toLowerCase())).toList();
+      }
+      //return jsonResponse.map((data) => Data.fromJson(data)).toList();
+    }else{
+      throw Exception('error');
+    }
+    return results;
+  }
+  Future<List<TaxonomyModel>>getCategory({String id="38365"})async{
+    String url="https://mycima.fun/appweb/posts/archived_category[$id]/";
+   // String url="https://mycima.fun/appweb/posts/archived_category[${id}]/";
+    if (kDebugMode) {
+      print (url);
+    }
+    var response = (await http.get(Uri.parse(url))) ;
     if(response.statusCode==200){
       List data=jsonDecode(response.body);
       return data.map((e) => TaxonomyModel.fromJson(e)).toList();
@@ -71,19 +92,19 @@ class TaxonomyApi{
       throw Exception('error');
     }
   }
-  Future<List<TaxonomyModel>>getCategory(String category,String id)async{
-     String url="https://mycima.fun/appweb/posts/archived_$category[$id]/";
-     var response = (await http.get(Uri.parse(url))) ;
-     if(response.statusCode==200){
-       List data=jsonDecode(response.body);
-       return data.map((e) => TaxonomyModel.fromJson(e)).toList();
-       //return jsonResponse.map((data) => Data.fromJson(data)).toList();
-     }else{
-       throw Exception('error');
-     }
+  Future<List<TaxonomyModel>>getSubCategory({String id="5"})async{
+    String url="https://mycima.fun/appweb/posts/archived_category[$id]/";
+    if (kDebugMode) {
+      print (url);
+    }
+    var response = (await http.get(Uri.parse(url))) ;
+    if(response.statusCode==200){
+      List data=jsonDecode(response.body);
+      return data.map((e) => TaxonomyModel.fromJson(e)).toList();
+      //return jsonResponse.map((data) => Data.fromJson(data)).toList();
+    }else{
+      throw Exception('error');
+    }
   }
-
-
-
 }
 
